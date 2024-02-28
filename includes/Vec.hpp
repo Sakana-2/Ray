@@ -33,6 +33,8 @@ public:
 };
 
 Vec3 operator*(float a, const Vec3 &v);
+bool operator==(const Vec3 &a, const Vec3 &b);
+bool operator!=(const Vec3 &a, const Vec3 &b);
 
 inline Vec3 lerp(float t, const Vec3 &a, const Vec3 &b)
 {

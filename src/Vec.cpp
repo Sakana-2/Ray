@@ -147,3 +147,13 @@ Vec3 operator*(float a, const Vec3 &v)
 {
 	return Vec3(a * v[0], a * v[1], a * v[2]);
 }
+
+bool operator==(const Vec3 &a, const Vec3 &b)
+{
+    return a[0] == b[0] && a[1] == b[1] && a[2] == b[2];
+}
+
+bool operator!=(const Vec3 &a, const Vec3 &b)
+{
+    return a[0] != b[0] || a[1] != b[1] || a[2] != b[2];
+}
