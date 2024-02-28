@@ -52,7 +52,7 @@ inline Vec3 random_another_vec3(const Vec3 &v)
 	do
 	{
 		dst = random_vec3();
-	} while (dst.normalize() != v.normalize());
+	} while (dst.normalize() == v.normalize());
 	return dst;
 }
 
