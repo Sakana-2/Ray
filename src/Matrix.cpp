@@ -12,10 +12,3 @@ Vec3 Matrix3::operator*(const Vec3 &x) const
     dst[2] = Vec3(_a1[2],_a2[2],_a3[2]).dot(x);
     return dst;
 }
-
-Matrix3 MakeLocalCo(const Vec3 &n, const Vec3 &vup)
-{
-    Vec3 ex = n.cross(vup).normalize();
-    Vec3 ez = ex.cross(n).normalize();
-    return Matrix3(ex,n,ez);
-}

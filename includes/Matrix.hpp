@@ -13,4 +13,9 @@ public:
     Vec3 operator*(const Vec3& x) const;
 };
 
-Matrix3 MakeLocalCo(const Vec3& n,const Vec3& vup);
+inline Matrix3 MakeLocalCo(const Vec3 &n)
+{
+    Vec3 ex = n.cross(random_another_vec3(n)).normalize();
+    Vec3 ez = ex.cross(n).normalize();
+    return Matrix3(ex,n,ez);
+}

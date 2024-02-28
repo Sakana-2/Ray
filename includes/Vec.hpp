@@ -46,6 +46,16 @@ inline Vec3 random_vec3()
 	return Vec3(drand48(), drand48(), drand48());
 }
 
+inline Vec3 random_another_vec3(const Vec3 &v)
+{
+	Vec3 dst;
+	do
+	{
+		dst = random_vec3();
+	} while (dst.normalize() != v.normalize());
+	return dst;
+}
+
 inline Vec3 random_in_unit_sphere()
 {
 	Vec3 p;
