@@ -30,24 +30,8 @@ void Scene::build()
     Vec3 w(-2.0f, -1.0f, -1.0f);
     Vec3 u(4.0f, 0.0f, 0.0f);
     Vec3 v(0.0f, 2.0f, 0.0f);
-    _camera = std::make_unique<Camera>(u, v, w);
-}
-
-float Scene::hit_sphere(const Vec3 &center, float radius, const Ray &r) const
-{
-    Vec3 oc = r.origin() - center;
-    float a = r.direction().dot(r.direction());
-    float b = 2.0f * (r.direction().dot(oc));
-    float c = oc.dot(oc) - radius * radius;
-    float D = b * b - 4 * a * c;
-    if (D < 0)
-    {
-        return -1.0f;
-    }
-    else
-    {
-        return (-b - std::sqrtf(D)) / (2.0f * a);
-    }
+    // _camera = std::make_unique<Camera>(u, v, w);
+    _camera = std::make_unique<Camera>(Vec3(0),w+u/2+v/2,Vec3(0,1,0),90,2);
 }
 
 Vec3 Scene::color(Ray &r, const Shape *world) const

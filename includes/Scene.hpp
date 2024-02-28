@@ -21,7 +21,6 @@ private:
 public:
     Scene(int height, int width, int samples, const char* fname, const Vec3 &vup = Vec3(0,1,0));
     void build();
-    float hit_sphere(const Vec3& center,float radius,const Ray& r) const;
     Vec3 color(Ray& r, const Shape* world) const;
     Vec3 background(const Vec3& d) const;
     Vec3 backgroundSky(const Vec3& d) const;
