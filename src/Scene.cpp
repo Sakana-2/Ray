@@ -11,8 +11,8 @@
 #include "Util.hpp"
 #include "Material.hpp"
 
-Scene::Scene(int height, int width, int samples, const char *fname, const Vec3 &vup)
-    : _image(std::make_unique<Image>(height, width)), _backColor(0.2f), _samples(samples), _fname(fname), _vup(vup)
+Scene::Scene(int height, int width, int samples, const char *fname)
+    : _image(std::make_unique<Image>(height, width)), _samples(samples), _fname(fname)
 {
 }
 
