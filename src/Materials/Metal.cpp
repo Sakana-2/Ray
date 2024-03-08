@@ -1,4 +1,4 @@
-#include "Metal.hpp"
+#include "Materials/Metal.hpp"
 #include "Matrix.hpp"
 
 Metal::Metal(const Vec3 &c) : _albedo(c)

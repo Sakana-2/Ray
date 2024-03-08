@@ -1,4 +1,4 @@
-#include "Lambertian.hpp"
+#include "Materials/Lambertian.hpp"
 #include "Matrix.hpp"
 
 #define LAMBERT_METHOD 1 //0:棄却法 1:逆関数法
