@@ -9,7 +9,9 @@
 
 #include "Scene.hpp"
 #include "Util.hpp"
-#include "Material.hpp"
+
+#include "Materials/Lambertian.hpp"
+#include "Materials/Metal.hpp"
 
 Scene::Scene(int height, int width, int samples, const char *fname)
     : _image(std::make_unique<Image>(height, width)), _samples(samples), _fname(fname)
@@ -31,7 +33,7 @@ void Scene::build()
     Vec3 u(4.0f, 0.0f, 0.0f);
     Vec3 v(0.0f, 2.0f, 0.0f);
     // _camera = std::make_unique<Camera>(u, v, w);
-    _camera = std::make_unique<Camera>(Vec3(0),w+u/2+v/2,Vec3(0,1,0),90,2);
+    _camera = std::make_unique<Camera>(Vec3(0), w + u / 2 + v / 2, Vec3(0, 1, 0), 90, 2);
 }
 
 Vec3 Scene::color(Ray &r, const Shape *world) const
@@ -70,6 +72,8 @@ void Scene::render()
 
     int nx = _image->width();
     int ny = _image->height();
+    float jitter_length = 1.0 / float(_samples);
+    int s2 = _samples * _samples;
 #pragma omp parallel for schedule(dynamic, 1) num_threads(NUM_THREAD)
     for (int j = 0; j < ny; j++)
     {
@@ -77,14 +81,19 @@ void Scene::render()
         for (int i = 0; i < nx; i++)
         {
             Vec3 c(0);
-            for (int s = 0; s < _samples; s++)
+            // jittering
+            for (int sy = 0; sy < _samples; sy++)
             {
-                float u = float(i + drand48()) / float(nx);
-                float v = float(j + drand48()) / float(ny);
-                Ray r = _camera->emitRay(u, v);
-                c += color(r, _world.get());
+                for (int sx = 0; sx < _samples; sx++)
+                {
+                    float u = float(i + jitter_length * (sx + drand48())) / float(nx);
+                    float v = float(j + jitter_length * (sy + drand48())) / float(ny);
+                    // std::cout << "u:" << u << " v:" << v << std::endl;
+                    Ray r = _camera->emitRay(u, v);
+                    c += color(r, _world.get());
+                }
             }
-            c /= _samples;
+            c /= s2;
             _image->set_pixel(j, i, c);
         }
     }
