@@ -21,5 +21,5 @@ inline float radian(float f)
 
 inline float drand48()
 {
-    return float(((double)(rand()) / (RAND_MAX)));
+    return float(((double)(std::rand()) / (RAND_MAX)));
 }
