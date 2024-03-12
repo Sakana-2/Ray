@@ -26,6 +26,18 @@ public:
     virtual bool hit(const Ray &r, float t0, float t1, HitRec &hrec) const override;
 };
 
+class Plane : public Shape
+{
+private:
+    Vec3 _point;
+    Vec3 _n;
+    MaterialPtr _material;
+public:
+    Plane();
+    Plane(const Vec3 &p,const Vec3 &n, const MaterialPtr& mat);
+    virtual bool hit(const Ray &r, float t0, float t1, HitRec &hrec) const override;
+};
+
 class ShapeList : public Shape
 {
 private:
