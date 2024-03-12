@@ -15,9 +15,9 @@ Camera::Camera(const Vec3& lookfrom,const Vec3& lookat,const Vec3& vup, float vf
     _origin = lookfrom;
 
     w = lookfrom - lookat;
-    w.normalize();
+    w = w.normalize();
     u = vup.cross(w);
-    u.normalize();
+    u = u.normalize();
     v = w.cross(u);
 
     _uvw[0] = u * 2.0f * halfW;
