@@ -25,6 +25,12 @@ Camera::Camera(const Vec3& lookfrom,const Vec3& lookat,const Vec3& vup, float vf
     _uvw[2] = _origin - u * halfW - v * halfH - w;
 }
 
-Ray Camera::emitRay(float u,float v){
+Vec3 Camera::origin() const
+{
+    return _origin;
+}
+
+Ray Camera::emitRay(float u,float v) const
+{
     return Ray(_origin,_uvw[2]+_uvw[0] * u+_uvw[1] * v - _origin);
 }
