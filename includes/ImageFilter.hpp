@@ -18,6 +18,13 @@ public:
     virtual Vec3 filter(const Vec3 &c) const override;
 };
 
+class ClampFilter : public ImageFilter
+{
+public:
+    ClampFilter();
+    virtual Vec3 filter(const Vec3 &c) const override;
+};
+
 inline Vec3 linear_to_gamma(const Vec3& v,float gammaFactor) {
     float recipGammaFactor = 1.0f / gammaFactor;
     return Vec3(

@@ -2,6 +2,7 @@
 
 Image::Image(unsigned int height, unsigned int width) : _width(width), _height(height), _pixels(std::vector<rgb>(width * height)){
     _filters.push_back(std::make_unique<GammaFilter>(GAMMA_FACTOR));
+    _filters.push_back(std::make_unique<ClampFilter>());
 };
 
 unsigned int Image::width() const
