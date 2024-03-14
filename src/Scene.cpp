@@ -21,19 +21,9 @@ Scene::Scene(int height, int width, int samples, const char *fname)
 void Scene::build()
 {
     ShapeList *world = new ShapeList();
-    world->add(std::make_shared<Sphere>(
-        Vec3(0, 0, -1), 0.5f,
-        std::make_shared<Lambertian>(Vec3(0.1f, 0.2f, 0.5f))));
-    world->add(std::make_shared<Sphere>(
-        Vec3(0, -100.5, -1), 100,
-        std::make_shared<Lambertian>(Vec3(0.8f, 0.8f, 0.0f))));
     _world.reset(world);
 
-    Vec3 w(-2.0f, -1.0f, -1.0f);
-    Vec3 u(4.0f, 0.0f, 0.0f);
-    Vec3 v(0.0f, 2.0f, 0.0f);
-    // _camera = std::make_unique<Camera>(u, v, w);
-    _camera = std::make_unique<Camera>(Vec3(0), w + u / 2 + v / 2, Vec3(0, 1, 0), 90, 2);
+    _camera = std::make_unique<Camera>(Vec3(0), Vec3(0,0,-1.0f), Vec3(0, 1, 0), 90, 2);
 }
 
 Vec3 Scene::color(Ray &r, const Shape *world) const
@@ -88,7 +78,6 @@ void Scene::render()
                 {
                     float u = float(i + jitter_length * (sx + drand48())) / float(nx);
                     float v = float(j + jitter_length * (sy + drand48())) / float(ny);
-                    // std::cout << "u:" << u << " v:" << v << std::endl;
                     Ray r = _camera->emitRay(u, v);
                     c += color(r, _world.get());
                 }
@@ -97,6 +86,5 @@ void Scene::render()
             _image->set_pixel(j, i, c);
         }
     }
-
     stbi_write_bmp(_fname, nx, ny, sizeof(rgb), _image->data());
 }
