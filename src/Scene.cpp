@@ -86,5 +86,18 @@ void Scene::render()
             _image->set_pixel(j, i, c);
         }
     }
+
+    //Test
+    // Ray r(_camera->origin(),Vec3(0,-0.5f,-1.0f));
+    // Vec3 c(0);
+    // for (int i = 0; i < s2; i++)
+    // {
+    //     c += color(r,_world.get());
+    // }
+    // c /= s2;
+    // std::cout << c << std::endl;
+    // Vec3 pix(static_cast<unsigned char>(c[0] * 255.99f), static_cast<unsigned char>(c[1] * 255.99f), static_cast<unsigned char>(c[2] * 255.99f));
+    // std::cout << pix << std::endl;
+    
     stbi_write_bmp(_fname, nx, ny, sizeof(rgb), _image->data());
 }
