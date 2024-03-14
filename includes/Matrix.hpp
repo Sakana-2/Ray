@@ -19,8 +19,8 @@ inline Matrix3 MakeLocalCo(const Vec3 &n)
 
     Vec3 x(1, 0, 0), y(0, 1, 0);
     Vec3 another_vec;
-    float dot_x = std::fabs(x.dot(n));
-    float dot_y = std::fabs(y.dot(n));
+    float dot_x = std::fabsf(x.dot(n));
+    float dot_y = std::fabsf(y.dot(n));
     if (dot_x < dot_y)
     {
         another_vec = x;
