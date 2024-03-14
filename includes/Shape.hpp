@@ -38,6 +38,17 @@ public:
     virtual bool hit(const Ray &r, float t0, float t1, HitRec &hrec) const override;
 };
 
+class Triangle : public Shape
+{
+private:
+    Vec3 _points[3];
+    MaterialPtr _material;
+public:
+    Triangle();
+    Triangle(const Vec3 points[3], const MaterialPtr& mat);
+    virtual bool hit(const Ray &r, float t0, float t1, HitRec &hrec) const override;
+};
+
 class ShapeList : public Shape
 {
 private:
