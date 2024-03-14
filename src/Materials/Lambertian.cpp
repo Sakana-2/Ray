@@ -3,7 +3,7 @@
 
 #define LAMBERT_METHOD 1 //0:棄却法 1:逆関数法
 
-Lambertian::Lambertian(const Vec3 &c) : _albedo(c)
+Lambertian::Lambertian(const Vec3 &c,const Vec3 &e) : _albedo(c),_emit(e)
 {
 }
 
@@ -16,5 +16,6 @@ bool Lambertian::scatter(const Ray &r, const HitRec &hrec, ScatterRec &srec) con
     srec.ray = Ray(hrec.p, MakeLocalCo(hrec.n) * random_by_invertion());
     #endif
     srec.albedo = _albedo;
+    srec.emit = _emit;
     return true;
 }

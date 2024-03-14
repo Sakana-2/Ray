@@ -34,7 +34,7 @@ Vec3 Scene::color(Ray &r, const Shape *world) const
         ScatterRec srec;
         if (hrec.mat->scatter(r, hrec, srec))
         {
-            return srec.albedo * color(srec.ray, world); // 要素ごとの積
+            return srec.albedo * color(srec.ray, world) + srec.emit; // 要素ごとの積
         }
         else
         {

@@ -17,6 +17,7 @@ struct ScatterRec
 {
     Ray ray;
     Vec3 albedo;
+    Vec3 emit;
 };
 
 class Material
