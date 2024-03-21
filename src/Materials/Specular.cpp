@@ -1,11 +1,11 @@
-#include "Materials/Metal.hpp"
+#include "Materials/Specular.hpp"
 #include "Matrix.hpp"
 
-Metal::Metal(const Vec3 &c) : _albedo(c)
+Specular::Specular(const Vec3 &c) : _albedo(c)
 {
 }
 
-bool Metal::scatter(const Ray &r, const HitRec &hrec, ScatterRec &srec) const
+bool Specular::scatter(const Ray &r, const HitRec &hrec, ScatterRec &srec) const
 {
     Vec3 reflected = reflection(r.direction(), hrec.n);
     srec.ray = Ray(hrec.p, reflected);
