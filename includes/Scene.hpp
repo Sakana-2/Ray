@@ -20,7 +20,6 @@ private:
 public:
     Scene(int height, int width, int samples, const char* fname);
     void build();
-    Vec3 color(Ray& r, const Shape* world) const;
     Vec3 background(const Vec3& d) const;
     Vec3 backgroundSky(const Vec3& d) const;
     void render();

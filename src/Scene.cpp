@@ -26,24 +26,6 @@ void Scene::build()
     _camera = std::make_unique<Camera>(Vec3(0), Vec3(0,0,-1.0f), Vec3(0, 1, 0), 90, 2);
 }
 
-Vec3 Scene::color(Ray &r, const Shape *world) const
-{
-    HitRec hrec;
-    if (world->hit(r, 0.001f, FLT_MAX, hrec))
-    {
-        ScatterRec srec;
-        if (hrec.mat->scatter(r, hrec, srec))
-        {
-            return srec.albedo * color(srec.ray, world) + srec.emit; // 要素ごとの積
-        }
-        else
-        {
-            return Vec3(0);
-        }
-    }
-    return backgroundSky(r.direction());
-}
-
 Vec3 Scene::background(const Vec3 &d) const
 {
     return _backColor;
@@ -79,7 +61,19 @@ void Scene::render()
                     float u = float(i + jitter_length * (sx + drand48())) / float(nx);
                     float v = float(j + jitter_length * (sy + drand48())) / float(ny);
                     Ray r = _camera->emitRay(u, v);
-                    c += color(r, _world.get());
+                    HitRec hrec;
+                    Vec3 alpha(1);
+                    while (_world.get()->hit(r, 0.001f, FLT_MAX, hrec))
+                    {
+                        ScatterRec srec;
+                        if (hrec.mat->scatter(r, hrec, srec))
+                        {
+                            c += alpha * srec.emit;
+                            alpha *= srec.albedo;
+                            r = srec.ray;
+                        }
+                    }
+                    c += alpha * backgroundSky(r.direction());
                 }
             }
             c /= s2;
@@ -87,17 +81,5 @@ void Scene::render()
         }
     }
 
-    //Test
-    // Ray r(_camera->origin(),Vec3(0,-0.5f,-1.0f));
-    // Vec3 c(0);
-    // for (int i = 0; i < s2; i++)
-    // {
-    //     c += color(r,_world.get());
-    // }
-    // c /= s2;
-    // std::cout << c << std::endl;
-    // Vec3 pix(static_cast<unsigned char>(c[0] * 255.99f), static_cast<unsigned char>(c[1] * 255.99f), static_cast<unsigned char>(c[2] * 255.99f));
-    // std::cout << pix << std::endl;
-    
     stbi_write_bmp(_fname, nx, ny, sizeof(rgb), _image->data());
 }
