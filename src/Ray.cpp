@@ -4,7 +4,7 @@ Ray::Ray()
 {
 }
 
-Ray::Ray(const Vec3 &o, const Vec3 &dir) : _origin(o), _direction(dir)
+Ray::Ray(const Vec3 &o, const Vec3 &dir) : _origin(o), _direction(dir.normalize())
 {
 }
 
