@@ -1,11 +1,17 @@
 #include "Shape.hpp"
 
+std::optional<MaterialPtr> Shape::mat() const
+{
+    return _material.value();
+}
+
 Sphere::Sphere()
 {
 }
 
-Sphere::Sphere(const Vec3 &c, float r, const MaterialPtr &mat) : _center(c), _radius(r), _material(mat)
+Sphere::Sphere(const Vec3 &c, float r, const MaterialPtr &mat) : _center(c), _radius(r)
 {
+    _material = mat;
 }
 
 bool Sphere::hit(const Ray &r, float t0, float t1, HitRec &hrec) const
@@ -24,7 +30,7 @@ bool Sphere::hit(const Ray &r, float t0, float t1, HitRec &hrec) const
             hrec.t = temp;
             hrec.p = r.at(hrec.t);
             hrec.n = (hrec.p - _center) / _radius;
-            hrec.mat = _material;
+            hrec.mat = _material.value();
             return true;
         }
         temp = (-b + root) / (2.0f * a);
@@ -33,7 +39,7 @@ bool Sphere::hit(const Ray &r, float t0, float t1, HitRec &hrec) const
             hrec.t = temp;
             hrec.p = r.at(hrec.t);
             hrec.n = (hrec.p - _center) / _radius;
-            hrec.mat = _material;
+            hrec.mat = _material.value();
             return true;
         }
     }
@@ -45,8 +51,9 @@ Plane::Plane()
 {
 }
 
-Plane::Plane(const Vec3 &p, const Vec3 &n, const MaterialPtr &mat) : _point(p), _n(n), _material(mat)
+Plane::Plane(const Vec3 &p, const Vec3 &n, const MaterialPtr &mat) : _point(p), _n(n)
 {
+    _material = mat;
 }
 
 bool Plane::hit(const Ray &r, float t0, float t1, HitRec &hrec) const
@@ -59,8 +66,8 @@ bool Plane::hit(const Ray &r, float t0, float t1, HitRec &hrec) const
         {
             hrec.t = temp;
             hrec.p = r.at(hrec.t);
-            hrec.n = _n;
-            hrec.mat = _material;
+            hrec.n = _n.dot(r.direction()) < 0 ? _n : -_n;
+            hrec.mat = _material.value();
             return true;
         }
     }
@@ -71,66 +78,59 @@ Triangle::Triangle()
 {
 }
 
-Triangle::Triangle(const Vec3 points[3], const MaterialPtr &mat) : _points{points[0], points[1], points[2]}, _material(mat)
+Triangle::Triangle(const Vec3 points[3], const MaterialPtr &mat)
+    : _points{points[0], points[1], points[2]},
+      _n(((points[1] - points[0]).cross(points[2] - points[0])).normalize()),
+      _area(std::sqrtf((_points[1] - _points[0]).lengthSqr() * (_points[2] - _points[0]).lengthSqr() - std::powf((_points[1] - _points[0]).dot(_points[2] - _points[0]), 2.0f)) / 2.0f)
 {
+    _material = mat;
+}
+
+float Triangle::area() const
+{
+    return _area;
+}
+
+Vec3 Triangle::sample() const
+{
+    Vec3 side1 = _points[1] - _points[0];
+    Vec3 side2 = _points[2] - _points[0];
+    float u,v;
+    do
+    {
+        u = drand48();
+        v = drand48();
+    } while (!(u >= 0 && v >= 0 && u+v <=1));
+    
+    return _points[0] + u * side1 + v* side2;
+}
+
+Vec3 Triangle::n(const Ray &r) const
+{
+    return _n.dot(r.direction()) < 0 ? _n : -_n;
 }
 
 bool Triangle::hit(const Ray &r, float t0, float t1, HitRec &hrec) const
 {
-    Vec3 a = _points[0];
-    Vec3 b = _points[1];
-    Vec3 c = _points[2];
+    Vec3 e1 = _points[1] - _points[0];
+    Vec3 e2 = _points[2] - _points[0];
+    Vec3 a2o = r.origin() - _points[0];
 
-    Vec3 normal = (b - a).cross(c - a).normalize(); // 平面の法線ベクトル
-
-    const float d = r.direction().dot(normal);
-    if (d != 0)
+    Vec3 d = r.direction();
+    const float D = (-d).cross(e1).dot(e2);
+    if (D != 0)
     {
-        const float param = (a - r.origin()).dot(normal) / d; // (a.dot(normal) - r.origin().dot(normal)) / d;
-
-        Vec3 crossing = r.at(param);
-
-        float d2, d3, alpha, beta, gamma;
-        if (((d2 = b[1] * (a[0] - c[0]) + b[0] * (-a[1] + c[1]) - a[0] * c[1] + a[1] * c[0]) != 0) &&
-            ((d3 = a[1] * (b[0] - c[0]) - a[0] * (b[1] - c[1]) - b[0] * c[1] + b[1] * c[0]) != 0))
+        float t = (a2o.cross(e1)).dot(e2) / D;
+        float u = ((-d).cross(a2o)).dot(e2) / D;
+        float v = ((-d).cross(e1)).dot(a2o) / D;
+        if (0 <= u && 0 <= v && u + v <= 1)
         {
-            alpha = (b[1] * (crossing[0] - c[0]) + b[0] * (c[1] - crossing[1]) + crossing[1] * c[0] - crossing[0] * c[1]) / d2;
-            beta = (a[1] * (crossing[0] - c[0]) - a[0] * (crossing[1] - c[1]) + c[0] * crossing[1] - c[1] * crossing[0]) / d3;
-            gamma = 1 - alpha - beta;
-        }
-        else if (
-            ((d2 = c[1] * (a[0] - b[0]) + c[0] * (-a[1] + b[1]) - a[0] * b[1] + a[1] * b[0]) != 0) &&
-            ((d3 = a[1] * (c[0] - b[0]) - a[0] * (c[1] - b[1]) - c[0] * b[1] + c[1] * b[0]) != 0))
-        {
-            alpha = (c[1] * (crossing[0] - b[0]) + c[0] * (b[1] - crossing[2]) + crossing[2] * b[0] - crossing[0] * b[1]) / d2;
-            gamma = (a[1] * (crossing[0] - b[0]) - a[0] * (crossing[2] - b[1]) + b[0] * crossing[2] - b[1] * crossing[0]) / d3;
-            beta = 1 - alpha - gamma;
-        }
-        else if (
-            ((d2 = c[1] * (b[0] - a[0]) + c[0] * (-b[1] + a[1]) - b[0] * a[1] + b[1] * a[0]) != 0) &&
-            ((d3 = b[1] * (c[0] - a[0]) - b[0] * (c[1] - a[1]) - c[0] * a[1] + c[1] * a[0]) != 0))
-        {
-            beta = (c[1] * (crossing[1] - a[0]) + c[0] * (a[1] - crossing[2]) + crossing[2] * a[0] - crossing[1] * a[1]) / d2;
-            gamma = (b[1] * (crossing[1] - a[0]) - b[0] * (crossing[2] - a[1]) + a[0] * crossing[2] - a[1] * crossing[1]) / d3;
-            alpha = 1 - beta - gamma;
-        }
-        else
-        {
-            return false;
-        }
-
-        if (0 <= alpha && alpha <= 1 && 0 <= beta && beta <= 1 && 0 <= gamma && gamma <= 1)
-        {
-            // std::cout << param << " " << t1 << " " << t0 << std::endl;
-            if (param < t1 && param > t0)
+            if (t < t1 && t > t0)
             {
-                hrec.t = param;
-                hrec.p = crossing;
-                hrec.n = normal;
-                hrec.mat = _material;
-                // std::cout << hrec.t << std::endl;
-                // std::cout << hrec.p << std::endl;
-                // std::cout << hrec.n << std::endl;
+                hrec.t = t;
+                hrec.p = r.at(t);
+                hrec.n = this->n(r);
+                hrec.mat = _material.value();
                 return true;
             }
         }

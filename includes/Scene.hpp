@@ -7,6 +7,7 @@
 #include "Camera.hpp"
 #include "Image.hpp"
 #include "Shape.hpp"
+#include "Light.hpp"
 
 class Scene
 {
@@ -14,6 +15,7 @@ private:
     std::unique_ptr<Camera> _camera;
     std::unique_ptr<Image> _image;
     std::unique_ptr<Shape> _world;
+    std::shared_ptr<Lights> _lights;
     Vec3 _backColor;
     const char* _fname;
     int _samples;

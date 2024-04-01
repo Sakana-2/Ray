@@ -11,7 +11,9 @@
 #include "Util.hpp"
 
 #include "Materials/Lambertian.hpp"
-#include "Materials/Metal.hpp"
+#include "Materials/Specular.hpp"
+
+#define TRACING_METHOD 1 // 0:STANDARD 1:NEE
 
 Scene::Scene(int height, int width, int samples, const char *fname)
     : _image(std::make_unique<Image>(height, width)), _samples(samples), _fname(fname)
@@ -21,9 +23,13 @@ Scene::Scene(int height, int width, int samples, const char *fname)
 void Scene::build()
 {
     ShapeList *world = new ShapeList();
+    Lights *lights = new Lights();
+
+    _lights.reset(lights);
+    world->add(_lights);
     _world.reset(world);
 
-    _camera = std::make_unique<Camera>(Vec3(0), Vec3(0,0,-1.0f), Vec3(0, 1, 0), 90, 2);
+    _camera = std::make_unique<Camera>(Vec3(0), Vec3(0, 0, -1), Vec3(0, 1, 0), 90, 1);
 }
 
 Vec3 Scene::background(const Vec3 &d) const
@@ -63,17 +69,46 @@ void Scene::render()
                     Ray r = _camera->emitRay(u, v);
                     HitRec hrec;
                     Vec3 alpha(1);
+                    bool first = true;
                     while (_world.get()->hit(r, 0.001f, FLT_MAX, hrec))
                     {
                         ScatterRec srec;
                         if (hrec.mat->scatter(r, hrec, srec))
                         {
+#if TRACING_METHOD == 0:
                             c += alpha * srec.emit;
                             alpha *= srec.albedo;
+#elif TRACING_METHOD == 1:
+                            alpha *= srec.albedo;
+                            if (first)
+                            {
+                                c += srec.emit;
+                                first = false;
+                            }
+
+                            if (srec.isSpecular)
+                            {
+                                c += alpha * srec.emit;
+                            }
+                            else
+                            {
+                                LightRec lrec;
+                                _lights.get()->sample(hrec.p, lrec);
+                                HitRec hitinfo;
+                                Vec3 s_dir = lrec.xl - hrec.p;
+                                Ray shadowRay(hrec.p, s_dir);
+                                if (!_world.get()->hit(shadowRay, 0.001f, s_dir.length(), hitinfo))
+                                {
+                                    float G = (-s_dir).dot(lrec.n) / s_dir.lengthSqr();
+                                    c += alpha * lrec.emit * G / lrec.pa;
+                                    // srec.albedo内に受け取る側でのcos項を含む
+                                }
+                            }
+#endif
+
                             r = srec.ray;
                         }
                     }
-                    c += alpha * backgroundSky(r.direction());
                 }
             }
             c /= s2;
