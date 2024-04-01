@@ -26,9 +26,11 @@ public:
 	float operator[](int i) const;
 	float &operator[](int i);
 	friend std::ostream &operator<<(std::ostream &os, const Vec3 &a);
+	Vec3 operator-() const;
 	float dot(const Vec3 &a) const;
 	Vec3 cross(const Vec3 &a) const;
 	Vec3 normalize() const;
+	float length() const;
 	float lengthSqr() const;
 };
 
