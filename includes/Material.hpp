@@ -18,6 +18,7 @@ struct ScatterRec
     Ray ray;
     Vec3 albedo;
     Vec3 emit;
+    bool isSpecular;
 };
 
 class Material

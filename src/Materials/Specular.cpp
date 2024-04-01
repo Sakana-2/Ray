@@ -10,5 +10,6 @@ bool Specular::scatter(const Ray &r, const HitRec &hrec, ScatterRec &srec) const
     Vec3 reflected = reflection(r.direction(), hrec.n);
     srec.ray = Ray(hrec.p, reflected);
     srec.albedo = _albedo;
+    srec.isSpecular = true;
     return srec.ray.direction().dot(hrec.n) > 0;
 }

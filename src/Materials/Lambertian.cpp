@@ -17,5 +17,6 @@ bool Lambertian::scatter(const Ray &r, const HitRec &hrec, ScatterRec &srec) con
     #endif
     srec.albedo = _albedo;
     srec.emit = _emit;
+    srec.isSpecular = false;
     return true;
 }
