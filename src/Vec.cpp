@@ -105,6 +105,11 @@ float &Vec3::operator[](int i)
 	return _data[i];
 }
 
+Vec3 Vec3::operator-() const
+{
+    return Vec3(-this->_data[0],-this->_data[1],-this->_data[2]);
+}
+
 float Vec3::dot(const Vec3 &a) const
 {
 	return this->_data[0] * a[0] + this->_data[1] * a[1] + this->_data[2] * a[2];
@@ -136,6 +141,11 @@ Vec3 Vec3::normalize() const
 		dst[2] = this->_data[2] / length;
 	}
 	return dst;
+}
+
+float Vec3::length() const
+{
+    return std::sqrtf(this->_data[0] * this->_data[0] + this->_data[1] * this->_data[1] + this->_data[2] * this->_data[2]);
 }
 
 float Vec3::lengthSqr() const
