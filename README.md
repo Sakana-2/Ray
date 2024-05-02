@@ -1,5 +1,5 @@
 # My Path Tracer
-
+![photo2](https://github.com/Sakana-2/Ray/assets/45968398/c9249b8a-1a80-4064-8759-a1b50a4c51b1)
 ## What this can
 Tracing method
 * Standard
