@@ -16,7 +16,7 @@ void Lights::sample(const Vec3 &x, LightRec &lrec)
     }
 
     float r = drand48(), s = 0, t = 0;
-    for (auto &p : _list)
+    for (auto &p : _list) //複数の光源を用いてのNEEの計算についてはもう一度考え直す必要あり
     {
         t = s + p->area() / sum;
         if (s < r || r < t)
