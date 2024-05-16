@@ -47,33 +47,6 @@ bool Sphere::hit(const Ray &r, float t0, float t1, HitRec &hrec) const
     return false;
 }
 
-Plane::Plane()
-{
-}
-
-Plane::Plane(const Vec3 &p, const Vec3 &n, const MaterialPtr &mat) : _point(p), _n(n)
-{
-    _material = mat;
-}
-
-bool Plane::hit(const Ray &r, float t0, float t1, HitRec &hrec) const
-{
-    float D = _n.dot(r.direction());
-    if (D != 0)
-    {
-        float temp = _n.dot(_point - r.origin()) / D;
-        if (temp < t1 && temp > t0)
-        {
-            hrec.t = temp;
-            hrec.p = r.at(hrec.t);
-            hrec.n = _n.dot(r.direction()) < 0 ? _n : -_n;
-            hrec.mat = _material.value();
-            return true;
-        }
-    }
-    return false;
-}
-
 Triangle::Triangle()
 {
 }

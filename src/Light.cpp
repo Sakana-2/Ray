@@ -1,7 +1,7 @@
 #include <iostream>
 #include "Light.hpp"
 
-void Lights::add(const std::shared_ptr<BoundedPlane> &shape)
+void Lights::add(const std::shared_ptr<Triangle> &shape)
 {
     _list.push_back(shape);
 }

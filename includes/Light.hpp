@@ -13,9 +13,9 @@ struct LightRec
 class Lights : public ShapeList
 {
 private:
-    std::vector<std::shared_ptr<BoundedPlane>> _list;
+    std::vector<std::shared_ptr<Triangle>> _list;
 public:
-    void add(const std::shared_ptr<BoundedPlane>& shape);
+    void add(const std::shared_ptr<Triangle>& shape);
     void sample(const Vec3& x,LightRec &lrec);
     bool hit(const Ray &r, float t0, float t1, HitRec &hrec) const;
 };
