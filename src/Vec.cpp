@@ -153,14 +153,14 @@ float Vec3::lengthSqr() const
 	return this->_data[0] * this->_data[0] + this->_data[1] * this->_data[1] + this->_data[2] * this->_data[2];
 }
 
-float Vec3::max(const Vec3 &a) const
+float Vec3::max() const
 {
-	float max = a[0];
+	float max = this->_data[0];
 	for (int i = 1; i < 3; i++)
 	{
-		if (max <= a[i])
+		if (max <= this->_data[i])
 		{
-			max = a[i];
+			max = this->_data[i];
 		}
 	}
 	return max;
