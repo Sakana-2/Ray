@@ -32,7 +32,7 @@ public:
 	Vec3 normalize() const;
 	float length() const;
 	float lengthSqr() const;
-	float max(const Vec3 &a) const;
+	float max() const;
 };
 
 Vec3 operator*(float a, const Vec3 &v);
