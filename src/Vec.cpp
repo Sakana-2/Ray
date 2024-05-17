@@ -59,7 +59,7 @@ Vec3 Vec3::operator*(const Vec3 &a) const
 	dst[0] = this->_data[0] * a[0];
 	dst[1] = this->_data[1] * a[1];
 	dst[2] = this->_data[2] * a[2];
-    return dst;
+	return dst;
 }
 
 Vec3 Vec3::operator*=(float x)
@@ -107,7 +107,7 @@ float &Vec3::operator[](int i)
 
 Vec3 Vec3::operator-() const
 {
-    return Vec3(-this->_data[0],-this->_data[1],-this->_data[2]);
+	return Vec3(-this->_data[0], -this->_data[1], -this->_data[2]);
 }
 
 float Vec3::dot(const Vec3 &a) const
@@ -145,12 +145,25 @@ Vec3 Vec3::normalize() const
 
 float Vec3::length() const
 {
-    return std::sqrtf(this->_data[0] * this->_data[0] + this->_data[1] * this->_data[1] + this->_data[2] * this->_data[2]);
+	return std::sqrtf(this->_data[0] * this->_data[0] + this->_data[1] * this->_data[1] + this->_data[2] * this->_data[2]);
 }
 
 float Vec3::lengthSqr() const
 {
 	return this->_data[0] * this->_data[0] + this->_data[1] * this->_data[1] + this->_data[2] * this->_data[2];
+}
+
+float Vec3::max(const Vec3 &a) const
+{
+	float max = a[0];
+	for (int i = 1; i < 3; i++)
+	{
+		if (max <= a[i])
+		{
+			max = a[i];
+		}
+	}
+	return max;
 }
 
 Vec3 operator*(float a, const Vec3 &v)
@@ -160,10 +173,10 @@ Vec3 operator*(float a, const Vec3 &v)
 
 bool operator==(const Vec3 &a, const Vec3 &b)
 {
-    return a[0] == b[0] && a[1] == b[1] && a[2] == b[2];
+	return a[0] == b[0] && a[1] == b[1] && a[2] == b[2];
 }
 
 bool operator!=(const Vec3 &a, const Vec3 &b)
 {
-    return a[0] != b[0] || a[1] != b[1] || a[2] != b[2];
+	return a[0] != b[0] || a[1] != b[1] || a[2] != b[2];
 }

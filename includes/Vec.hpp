@@ -32,25 +32,13 @@ public:
 	Vec3 normalize() const;
 	float length() const;
 	float lengthSqr() const;
+	float max(const Vec3 &a) const;
 };
 
 Vec3 operator*(float a, const Vec3 &v);
 bool operator==(const Vec3 &a, const Vec3 &b);
 bool operator!=(const Vec3 &a, const Vec3 &b);
 
-inline float max(const Vec3 &a)
-{
-	float max = a[0];
-	for (int i = 1; i < 3; i++)
-	{
-		if (max <= a[i])
-		{
-			max = a[i];
-		}
-		
-	}
-	return max;
-}
 
 inline Vec3 lerp(float t, const Vec3 &a, const Vec3 &b)
 {
