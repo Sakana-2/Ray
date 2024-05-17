@@ -5,6 +5,11 @@ std::optional<MaterialPtr> Shape::mat() const
     return _material.value();
 }
 
+AABB Shape::box() const
+{
+    return _box;
+}
+
 Sphere::Sphere()
 {
 }
@@ -12,6 +17,7 @@ Sphere::Sphere()
 Sphere::Sphere(const Vec3 &c, float r, const MaterialPtr &mat) : _center(c), _radius(r)
 {
     _material = mat;
+    _box = AABB(Vec3(c[0] - r, c[1] - r, c[2] - r), Vec3(c[0] + r, c[1] + r, c[2] + r));
 }
 
 bool Sphere::hit(const Ray &r, float t0, float t1, HitRec &hrec) const
@@ -57,6 +63,7 @@ Triangle::Triangle(const Vec3 points[3], const MaterialPtr &mat)
       _area(std::sqrtf((_points[1] - _points[0]).lengthSqr() * (_points[2] - _points[0]).lengthSqr() - std::powf((_points[1] - _points[0]).dot(_points[2] - _points[0]), 2.0f)) / 2.0f)
 {
     _material = mat;
+    _box = AABB(min(min(points[0], points[1]), points[2]), max(max(points[0], points[1]), points[2]));
 }
 
 float Triangle::area() const
@@ -68,14 +75,14 @@ Vec3 Triangle::sample() const
 {
     Vec3 side1 = _points[1] - _points[0];
     Vec3 side2 = _points[2] - _points[0];
-    float u,v;
+    float u, v;
     do
     {
         u = drand48();
         v = drand48();
-    } while (!(u >= 0 && v >= 0 && u+v <=1));
-    
-    return _points[0] + u * side1 + v* side2;
+    } while (!(u >= 0 && v >= 0 && u + v <= 1));
+
+    return _points[0] + u * side1 + v * side2;
 }
 
 Vec3 Triangle::n(const Ray &r) const
@@ -118,6 +125,15 @@ ShapeList::ShapeList()
 void ShapeList::add(const ShapePtr &shape)
 {
     _list.push_back(shape);
+    
+    if (_list.size() == 0)
+    {
+        _box = shape->box();
+    }
+    else
+    {
+        _box = merge(_box, shape->box());
+    }
 }
 
 bool ShapeList::hit(const Ray &r, float t0, float t1, HitRec &hrec) const

@@ -1,5 +1,9 @@
 #include <AABB.hpp>
 
+AABB::AABB()
+{
+}
+
 AABB::AABB(const Vec3 &min, const Vec3 &max) : _pMin(min), _pMax(max)
 {
 }

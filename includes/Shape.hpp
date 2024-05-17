@@ -4,6 +4,7 @@
 #include <vector>
 #include <optional>
 
+#include "AABB.hpp"
 #include "Util.hpp"
 #include "Ray.hpp"
 #include "Material.hpp"
@@ -12,10 +13,12 @@ class Shape
 {
 protected:
     std::optional<MaterialPtr> _material;
+    AABB _box;
 
 public:
     virtual bool hit(const Ray &r, float t0, float t1, HitRec &hrec) const = 0;
     std::optional<MaterialPtr> mat() const;
+    AABB box() const;
 };
 
 class Sphere : public Shape

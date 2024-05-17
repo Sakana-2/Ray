@@ -1,4 +1,4 @@
-#include <Vec.hpp>
+#include "Vec.hpp"
 
 class AABB
 {
@@ -7,6 +7,7 @@ private:
     Vec3 _pMax;
 
 public:
+    AABB();
     AABB(const Vec3 &min, const Vec3 &max);
     Vec3 pMin() const;
     Vec3 pMax() const;
