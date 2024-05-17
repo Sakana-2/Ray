@@ -61,8 +61,8 @@ void Scene::build()
 
     Vec3 tl[3] = {Vec3(-0.125f, 0.499f, -0.875f), Vec3(0.125f, 0.499f, -0.875f), Vec3(0.125f, 0.499f, -1.125f)};
     Vec3 tl2[3] = {Vec3(-0.125f, 0.499f, -0.875f), Vec3(-0.125f, 0.499f, -1.125f), Vec3(0.125f, 0.499f, -1.125f)};
-    lights->add(std::make_shared<Triangle>(tl, std::make_shared<Lambertian>(Vec3(0), Vec3(1))));
-    lights->add(std::make_shared<Triangle>(tl2, std::make_shared<Lambertian>(Vec3(0), Vec3(1))));
+    lights->add(std::make_shared<Triangle>(tl, std::make_shared<Lambertian>(Vec3(0), Vec3(4))));
+    lights->add(std::make_shared<Triangle>(tl2, std::make_shared<Lambertian>(Vec3(0), Vec3(4))));
 
     _lights.reset(lights);
     world->add(_lights);
@@ -146,7 +146,7 @@ void Scene::render()
                             alpha *= srec.albedo; // これでうまくいってるのは拡散反射だから、別の素材をやるときは改良すべし
                             
                             //Russian Rurrete
-                            float prr = max(srec.albedo);
+                            float prr = srec.albedo.max();
                             if (drand48() >= prr)
                             {
                                 break;   
