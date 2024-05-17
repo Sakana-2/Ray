@@ -39,6 +39,71 @@ Vec3 operator*(float a, const Vec3 &v);
 bool operator==(const Vec3 &a, const Vec3 &b);
 bool operator!=(const Vec3 &a, const Vec3 &b);
 
+inline Vec3 max(const Vec3 &a, const Vec3 &b)
+{
+	Vec3 dst;
+	if (a[0] > b[0])
+	{
+		dst[0] = a[0];
+	}
+	else
+	{
+		dst[0] = b[0];
+	}
+
+	if (a[1] > b[1])
+	{
+		dst[1] = a[1];
+	}
+	else
+	{
+		dst[1] = b[1];
+	}
+
+	if (a[2] > b[2])
+	{
+		dst[2] = a[2];
+	}
+	else
+	{
+		dst[2] = b[2];
+	}
+
+	return dst;
+}
+
+inline Vec3 min(const Vec3 &a, const Vec3 &b)
+{
+	Vec3 dst;
+	if (a[0] < b[0])
+	{
+		dst[0] = a[0];
+	}
+	else
+	{
+		dst[0] = b[0];
+	}
+
+	if (a[1] < b[1])
+	{
+		dst[1] = a[1];
+	}
+	else
+	{
+		dst[1] = b[1];
+	}
+
+	if (a[2] < b[2])
+	{
+		dst[2] = a[2];
+	}
+	else
+	{
+		dst[2] = b[2];
+	}
+
+	return dst;
+}
 
 inline Vec3 lerp(float t, const Vec3 &a, const Vec3 &b)
 {
