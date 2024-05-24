@@ -5,13 +5,14 @@
 class Matrix3
 {
 private:
-    Vec3 _a1;
-    Vec3 _a2;
-    Vec3 _a3;
+    Vec3 _a[3];
 
 public:
     Matrix3(const Vec3 &a1, const Vec3 &a2, const Vec3 &a3);
     Vec3 operator*(const Vec3 &x) const;
+    Vec3 operator[](int i) const;
+    Vec3 &operator[](int i);
+    float det() const;
 };
 
 inline Matrix3 MakeLocalCo(const Vec3 &n)
